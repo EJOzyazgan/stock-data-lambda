@@ -1,0 +1,10 @@
+{
+  "name": "StockDataLambda",
+  "version": "1.0.0",
+  "description": "Lambdas for Stock Data",
+  "author": "EJ_Ozyazgan",
+  "license": "MIT",
+  "devDependencies": {
+    "serverless-python-requirements": "^6.1.0"
+  }
+}
