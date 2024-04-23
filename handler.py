@@ -2,6 +2,7 @@ import datetime
 import logging
 import pandas as pd
 import boto3
+import json
 from selenium import webdriver
 from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.common.keys import Keys
@@ -18,7 +19,7 @@ logger.setLevel(logging.INFO)
 # pass: Il0vecat5!
 
 def updateTickerSymbols(event, context):
-	print(event["body"])
+	print(json.loads(event["body"])["tickers"])
 	dynamoDBClient = boto3.client('dynamodb')
 	dynamoDBClient.update_item(
 		TableName='StockDataDB',
