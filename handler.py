@@ -42,7 +42,7 @@ def getTickerSymbols(event, context):
 		Key={
 			'ID': 'TickerDataRow'
 		}
-	).Item.Tickers
+	)
 
 
 def getSiteData(url, ticker):
