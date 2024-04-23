@@ -37,20 +37,14 @@ def dailyStockData(event, context):
 
 def getTickerSymbols(event, context):
 	dynamoDBClient = boto3.client('dynamodb')
-	data = dynamoDBClient.get_item(
+	return dynamoDBClient.get_item(
 		TableName='StockDataDB',
 		Key={
 			'ID': {
 				'S': 'TickerDataRow'
 			}
 		}
-	)
-
-	print(data)
-	print(data["Item"])
-	print(data["Item"]["Tickers"])
-
-	return data
+	)["Item"]["Tickers"]["SS"]
 
 
 def getSiteData(url, ticker):
