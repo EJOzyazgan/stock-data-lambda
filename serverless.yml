@@ -4,7 +4,7 @@ frameworkVersion: '3'
 
 provider:
   name: aws
-  runtime: python3.12
+  runtime: python3.10
   region: us-west-2
 
 functions:
@@ -48,9 +48,9 @@ resources:
                     - dynamodb:UpdateItem
                   Resource: "*"
 
-# custom:
-#   pythonRequirements:
-#     usePipenv: true
+custom:
+  pythonRequirements:
+    usePipenv: false
 
 plugins:
-  - serverless-python-requirements
+  - serverless-python-requirements              
