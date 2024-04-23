@@ -18,7 +18,7 @@ logger.setLevel(logging.INFO)
 # pass: Il0vecat5!
 
 def updateTickerSymbols(event, context):
-	print(event)
+	print(event["body"])
 	dynamoDBClient = boto3.client('dynamodb')
 	dynamoDBClient.update_item(
 		TableName='StockDataDB',
