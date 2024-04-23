@@ -19,14 +19,30 @@ logger.setLevel(logging.INFO)
 
 def updateTickerSymbols(event, context):
 	dynamoDBClient = boto3.client('dynamodb')
-
+	dynamoDBClient.update_item(
+		TableName='StockDataDB',
+		Key={
+			'ID': {
+				'S': 'TickerDataRow'
+			}
+		},
+		ExpressionAttributeNames={
+        '#tickers': "Tickers"
+    },
+    ExpressionAttributeValues={
+        ':tickers': {
+            'SS': event["tickers"]
+        }
+    },
+		UpdateExpression='SET #tickers = :tickers'
+	)
 
 def dailyStockData(event, context):
 	current_time = datetime.datetime.now().time()
 	name = context.function_name
 	logger.info("Your cron function " + name + " ran at " + str(current_time))
 
-	tickers = getTickerSymbols(event, context) #QQQ, SPY, RSP, UWM, ^TNX, TLH, ^VIX
+	tickers = getTickerSymbols(event, context) #[QQQ, SPY, RSP, UWM, ^TNX, TLH, ^VIX]
 	stockDataFrames = []
 
 	# for ticker in tickers:
