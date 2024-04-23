@@ -48,9 +48,9 @@ resources:
                     - dynamodb:UpdateItem
                   Resource: "*"
 
-custom:
-  pythonRequirements:
-    usePipenv: true
+# custom:
+#   pythonRequirements:
+#     usePipenv: true
 
 plugins:
   - serverless-python-requirements
