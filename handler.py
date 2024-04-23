@@ -18,6 +18,7 @@ logger.setLevel(logging.INFO)
 # pass: Il0vecat5!
 
 def updateTickerSymbols(event, context):
+	print(event)
 	dynamoDBClient = boto3.client('dynamodb')
 	dynamoDBClient.update_item(
 		TableName='StockDataDB',
@@ -45,10 +46,10 @@ def dailyStockData(event, context):
 	tickers = getTickerSymbols(event, context) #[QQQ, SPY, RSP, UWM, ^TNX, TLH, ^VIX]
 	stockDataFrames = []
 
-	# for ticker in tickers:
-	# 	stockDataFrames.append(getSiteData(f'https://finance.yahoo.com/quote/{ticker}/history', ticker))
+	for ticker in tickers:
+		stockDataFrames.append(getSiteData(f'https://finance.yahoo.com/quote/{ticker}/history', ticker))
 
-	# print(pd.concat(stockDataFrames))
+	print(pd.concat(stockDataFrames))
 	
 
 def getTickerSymbols(event, context):
