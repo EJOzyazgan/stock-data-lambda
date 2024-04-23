@@ -19,7 +19,8 @@ logger.setLevel(logging.INFO)
 # pass: Il0vecat5!
 
 def updateTickerSymbols(event, context):
-	print(json.loads(event["body"])["tickers"])
+	data = json.loads(event["body"])["tickers"]
+	print(data)
 	dynamoDBClient = boto3.client('dynamodb')
 	dynamoDBClient.update_item(
 		TableName='StockDataDB',
@@ -33,7 +34,7 @@ def updateTickerSymbols(event, context):
     },
     ExpressionAttributeValues={
         ':tickers': {
-            'SS': event["body"]["tickers"]
+            'SS': data
         }
     },
 		UpdateExpression='SET #tickers = :tickers'
