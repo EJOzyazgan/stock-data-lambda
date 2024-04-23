@@ -32,7 +32,7 @@ def updateTickerSymbols(event, context):
     },
     ExpressionAttributeValues={
         ':tickers': {
-            'SS': event["tickers"]
+            'SS': event["body"]["tickers"]
         }
     },
 		UpdateExpression='SET #tickers = :tickers'
