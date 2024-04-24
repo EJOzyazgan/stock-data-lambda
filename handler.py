@@ -45,7 +45,8 @@ def dailyStockData(event, context):
 	name = context.function_name
 	logger.info("Your cron function " + name + " ran at " + str(current_time))
 
-	tickers = getTickerSymbols(event, context) #[QQQ, SPY, RSP, UWM, ^TNX, TLH, ^VIX]
+	tickers = getTickerSymbols(event, context) #['QQQ', 'RSP', 'SPY', 'TLH', 'UWM', '^TNX', '^VIX']
+	print(tickers)
 	stockDataFrames = []
 
 	for ticker in tickers:
