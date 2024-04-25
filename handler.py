@@ -73,7 +73,7 @@ def getSiteData(url, ticker):
 
 		options = Options()
 		options.add_argument("-headless")
-		options.add_argument("-profile=/tmp")
+		options.add_argument("--disk-cache-dir=/tmp")
 		driver = webdriver.Firefox(options=options)
 		driver.get(url)
 
