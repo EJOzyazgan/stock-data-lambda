@@ -52,6 +52,7 @@ resources:
 custom:
   pythonRequirements:
     usePipenv: false
+    dockerFile: Dockerfile
 
 plugins:
   - serverless-python-requirements              
