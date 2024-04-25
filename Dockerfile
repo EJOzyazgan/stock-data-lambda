@@ -6,3 +6,5 @@ RUN apt-get update && apt-get install -y wget bzip2 libxtst6 libgtk-3-0 libx11-x
 
 RUN pip3 install --no-cache-dir wheel
 RUN pip3 install --no-cache-dir -r requirements.txt
+
+RUN export HOME=/tmp
