@@ -4,11 +4,8 @@ import pandas as pd
 import boto3
 import json
 from selenium import webdriver
-from selenium.webdriver.firefox.options import Options
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.wait import WebDriverWait
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -30,13 +27,13 @@ def updateTickerSymbols(event, context):
 			}
 		},
 		ExpressionAttributeNames={
-        '#tickers': "Tickers"
-    },
-    ExpressionAttributeValues={
-        ':tickers': {
-            'SS': data
-        }
-    },
+				'#tickers': "Tickers"
+		},
+		ExpressionAttributeValues={
+				':tickers': {
+						'SS': data
+				}
+		},
 		UpdateExpression='SET #tickers = :tickers'
 	)
 
@@ -45,7 +42,7 @@ def dailyStockData(event, context):
 	name = context.function_name
 	logger.info("Your cron function " + name + " ran at " + str(current_time))
 
-	tickers = getTickerSymbols(event, context) #['QQQ', 'RSP', 'SPY', 'TLH', 'UWM', '^TNX', '^VIX']
+	tickers = ['QQQ', 'RSP', 'SPY', 'TLH', 'UWM', '^TNX', '^VIX'] #getTickerSymbols(event, context) #['QQQ', 'RSP', 'SPY', 'TLH', 'UWM', '^TNX', '^VIX']
 	print(tickers)
 	stockDataFrames = []
 
@@ -71,9 +68,14 @@ def getSiteData(url, ticker):
 	try:  
 		print(url)
 
-		options = Options()
-		options.add_argument("-headless")
-		driver = webdriver.Firefox(options=options)
+		options = webdriver.ChromeOptions()
+		options.binary_location = '/opt/headless-chromium'
+		options.add_argument('--headless')
+		options.add_argument('--no-sandbox')
+		options.add_argument('--single-process')
+		options.add_argument('--disable-dev-shm-usage')
+
+		driver = webdriver.Chrome(options=options)
 		driver.get(url)
 
 		headers = {}
