@@ -66,6 +66,7 @@ resources:
 custom:
   pythonRequirements:
     usePipenv: false
+    dockerizePip: true
     dockerFile: Dockerfile
 
 plugins:
