@@ -6,14 +6,15 @@ provider:
   name: aws
   # runtime: python3.10
   region: us-west-2
-  # ecr:
-  #   images:
-  #     img:
-  #       path: ./
-  #       platform: linux/amd64
+  ecr:
+    images:
+      img:
+        path: ./
+        platform: linux/amd64
 
 functions:
   dailyStockData:
+    # handler: handler.dailyStockData
     role: DynamoIAM
     timeout: 500 # 5 minutes
     image:
@@ -24,12 +25,14 @@ functions:
       # Invoke Lambda function 4:30pm Mon-Fri PST
       - schedule: cron(30 23 ? * MON-FRI *)
   updateTickers:
+    # handler: handler.updateTickerSymbols
     image:
       name: img
       command: 
         - handler.updateTickerSymbols
     role: DynamoIAM
   getTickers:
+    # handler: handler.getTickerSymbols
     image:
       name: img
       command: 
@@ -63,11 +66,11 @@ resources:
                     - dynamodb:UpdateItem
                   Resource: "*"
 
-custom:
-  pythonRequirements:
-    usePipenv: false
-    dockerizePip: true
-    dockerFile: Dockerfile
+# custom:
+#   pythonRequirements:
+#     usePipenv: false
+#     dockerizePip: true
+#     dockerFile: Dockerfile
 
-plugins:
-  - serverless-python-requirements              
+# plugins:
+#   - serverless-python-requirements              
