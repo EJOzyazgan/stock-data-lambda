@@ -65,17 +65,20 @@ def getTickerSymbols(event, context):
 
 
 def getSiteData(url, ticker):
+
+	options = webdriver.ChromeOptions()
+	options.binary_location = '/opt/headless-chromium'
+	options.add_argument('--headless')
+	options.add_argument('--no-sandbox')
+	options.add_argument('--single-process')
+	options.add_argument('--disable-dev-shm-usage')
+
+	driver = webdriver.Chrome(options=options)
+		
 	try:  
 		print(url)
 
-		options = webdriver.ChromeOptions()
-		options.binary_location = '/opt/headless-chromium'
-		options.add_argument('--headless')
-		options.add_argument('--no-sandbox')
-		options.add_argument('--single-process')
-		options.add_argument('--disable-dev-shm-usage')
-
-		driver = webdriver.Chrome(options=options)
+		
 		driver.get(url)
 
 		headers = {}
