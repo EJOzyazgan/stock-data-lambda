@@ -12,32 +12,32 @@ provider:
         path: ./
         platform: linux/amd64
 
-functions:
-  dailyStockData:
-    # handler: handler.dailyStockData
-    role: DynamoIAM
-    timeout: 500 # 5 minutes
-    image:
-      name: img
-      command: 
-        - handler.dailyStockData
-    events:
-      # Invoke Lambda function 4:30pm Mon-Fri PST
-      - schedule: cron(30 23 ? * MON-FRI *)
-  updateTickers:
-    # handler: handler.updateTickerSymbols
-    image:
-      name: img
-      command: 
-        - handler.updateTickerSymbols
-    role: DynamoIAM
-  getTickers:
-    # handler: handler.getTickerSymbols
-    image:
-      name: img
-      command: 
-        - handler.getTickerSymbols
-    role: DynamoIAM
+# functions:
+  # dailyStockData:
+  #   # handler: handler.dailyStockData
+  #   role: DynamoIAM
+  #   timeout: 500 # 5 minutes
+  #   image:
+  #     name: img
+  #     command: 
+  #       - handler.dailyStockData
+  #   events:
+  #     # Invoke Lambda function 4:30pm Mon-Fri PST
+  #     - schedule: cron(30 23 ? * MON-FRI *)
+  # updateTickers:
+  #   # handler: handler.updateTickerSymbols
+  #   image:
+  #     name: img
+  #     command: 
+  #       - handler.updateTickerSymbols
+  #   role: DynamoIAM
+  # getTickers:
+  #   # handler: handler.getTickerSymbols
+  #   image:
+  #     name: img
+  #     command: 
+  #       - handler.getTickerSymbols
+  #   role: DynamoIAM
 
 resources:
   Resources:
