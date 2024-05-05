@@ -39,33 +39,6 @@ def updateTickerSymbols(event, context):
 		UpdateExpression='SET #tickers = :tickers'
 	)
 
-def dailyStockData(event, context):
-	current_time = datetime.datetime.now().time()
-	name = context.function_name
-	logger.info("Your cron function " + name + " ran at " + str(current_time))
-
-	tickers = getTickerSymbols(event, context) #['QQQ', 'RSP', 'SPY', 'TLH', 'UWM', '^TNX', '^VIX']
-	print(tickers)
-	stockDataFrames = []
-
-	for ticker in tickers:
-		stockDataFrames.append(getSiteData(f'https://finance.yahoo.com/quote/{ticker}/history', ticker))
-
-	print(pd.concat(stockDataFrames))
-	
-
-def getTickerSymbols(event, context):
-	dynamoDBClient = boto3.client('dynamodb')
-	return dynamoDBClient.get_item(
-		TableName='StockDataDB',
-		Key={
-			'ID': {
-				'S': 'TickerDataRow'
-			}
-		}
-	)["Item"]["Tickers"]["SS"]
-
-
 def getSiteData(url, ticker):
 
 	options = webdriver.ChromeOptions()
@@ -111,6 +84,14 @@ def getSiteData(url, ticker):
 		firstRow = driver.find_element(By.XPATH, '//*[@id="nimbus-app"]/section/section/section/article/div[1]/div[3]/table/tbody/tr[1]');
 		rowData = firstRow.find_elements(By.TAG_NAME, 'td')
 
+		if len(rowData) < 4:
+			return pd.DataFrame({
+			'Open': ['N/A'],
+			'High': ['N/A'],
+			'Low': ['N/A'],
+			'Close': ['N/A']
+		}, index=[ticker])
+
 		for key in headers.keys():
 			dataTemplate[key].append(rowData[headers[key]].text)
 		
@@ -118,6 +99,37 @@ def getSiteData(url, ticker):
 
 	except Exception as e:
 		print('ERROR: ', e)
-		return pd.DataFrame(dataTemplate, index=[ticker])
+		return pd.DataFrame({
+			'Open': ['N/A'],
+			'High': ['N/A'],
+			'Low': ['N/A'],
+			'Close': ['N/A']
+		}, index=[ticker])
 	finally:
 		driver.close()
+
+def dailyStockData(event, context):
+	current_time = datetime.datetime.now().time()
+	name = context.function_name
+	logger.info("Your cron function " + name + " ran at " + str(current_time))
+
+	tickers = getTickerSymbols(event, context) #['QQQ', 'RSP', 'SPY', 'TLH', 'UWM', '^TNX', '^VIX']
+	print(tickers)
+	stockDataFrames = []
+
+	for ticker in tickers:
+		stockDataFrames.append(getSiteData(f'https://finance.yahoo.com/quote/{ticker}/history', ticker))
+
+	print(pd.concat(stockDataFrames))
+	
+
+def getTickerSymbols(event, context):
+	dynamoDBClient = boto3.client('dynamodb')
+	return dynamoDBClient.get_item(
+		TableName='StockDataDB',
+		Key={
+			'ID': {
+				'S': 'TickerDataRow'
+			}
+		}
+	)["Item"]["Tickers"]["SS"]
