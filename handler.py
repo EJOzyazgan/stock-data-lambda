@@ -145,6 +145,8 @@ def sendMessage(message):
 		loginButton = loginPage.find_element(By.XPATH, '//*[@id="new_user"]/div[4]/button')
 		loginButton.click()
 
+		print("Login Passed")
+
 		agreementsPage = WebDriverWait(driver, 60).until(EC.presence_of_element_located((By.XPATH, '//*[@id="tos-pp"]')))
 
 		tosButton = agreementsPage.find_element(By.XPATH, '//*[@id="tos-pp"]')
@@ -156,11 +158,15 @@ def sendMessage(message):
 		agreeButton = agreementsPage.find_element(By.XPATH, '//*[@id="tos-form"]/div[3]/div/div[2]/button')
 		agreeButton.click()
 
+		print("Agreement Passed")
+
 		verificationPage = WebDriverWait(driver, 60).until(EC.presence_of_element_located((By.XPATH, '//*[@id="mainWrapper"]/div[1]/div/div/div/div/div/div[2]/div[1]')))
 		
 		verificationButton = verificationPage.find_element(By.XPATH, '//*[@id="mainWrapper"]/div[1]/div/div/div/div/div/div[2]/div[1]')
 		ActionChains(driver).scroll_to_element(verificationButton).perform()
 		verificationButton.click()
+
+		print("Verification Passed")
 
 		mainPage = WebDriverWait(driver, 60).until(EC.presence_of_element_located((By.XPATH, '//*[@id="mainWrapper"]/div[1]/div/div[1]/div[3]/button')))
 
@@ -179,9 +185,11 @@ def sendMessage(message):
 		messageField = WebDriverWait(driver, 60).until(EC.presence_of_element_located((By.XPATH, '//*[@id="message_body"]')))
 		messageField.send_keys(message)
 
-		sendButton = messagePage.find_element(By.XPATH, '//*[@id="message-form"]/div[2]/div[5]/div[1]/button')
-		ActionChains(driver).scroll_to_element(sendButton).perform()
-		sendButton.click()
+		driver.save_screenshot('screenshot.png')
+
+		# sendButton = messagePage.find_element(By.XPATH, '//*[@id="message-form"]/div[2]/div[5]/div[1]/button')
+		# ActionChains(driver).scroll_to_element(sendButton).perform()
+		# sendButton.click()
 
 	except Exception as e:
 		print('ERROR: ', e)
