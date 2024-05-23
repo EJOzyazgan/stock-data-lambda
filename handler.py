@@ -16,7 +16,7 @@ logger.setLevel(logging.INFO)
 
 def updateTickerSymbols(event, context):
 	data = json.loads(event["body"])["tickers"]
-	print(data)
+	logger.info(data)
 	dynamoDBClient = boto3.client('dynamodb')
 	dynamoDBClient.update_item(
 		TableName='StockDataDB',
@@ -58,7 +58,7 @@ def getSiteData(url, ticker):
 	driver = webdriver.Chrome(options=options, service=service)
 	
 	try:  
-		print(url)
+		logger.info(url)
 		
 		driver.get(url)
 
@@ -95,7 +95,7 @@ def getSiteData(url, ticker):
 		return pd.DataFrame(dataTemplate, index=[ticker])
 
 	except Exception as e:
-		print('ERROR: ', e)
+		logger.error('ERROR: ', e)
 		return pd.DataFrame({
 			'Open': ['N/A'],
 			'High': ['N/A'],
@@ -131,9 +131,9 @@ def sendMessage(message):
 	# https://sso.gtlconnect.com/users/sign_in
 	# email: hoku2dreamer@gmail.com
 	# pass: Il0vecat5!
-		# driver.get("https://sso.gtlconnect.com/users/sign_in")
 
 		driver.get('https://visit.telmate.com/user/messages')
+		driver.maximize_window()
 
 		loginPage = WebDriverWait(driver, 60).until(EC.presence_of_element_located((By.XPATH, '//*[@id="user_email"]')))
 
@@ -146,7 +146,7 @@ def sendMessage(message):
 		loginButton = loginPage.find_element(By.XPATH, '//*[@id="new_user"]/div[4]/button')
 		loginButton.click()
 
-		print("Login Passed")
+		logger.info("Login Passed")
 
 		agreementsPage = WebDriverWait(driver, 60).until(EC.presence_of_element_located((By.XPATH, '//*[@id="tos-pp"]')))
 
@@ -159,7 +159,7 @@ def sendMessage(message):
 		agreeButton = agreementsPage.find_element(By.XPATH, '//*[@id="tos-form"]/div[3]/div/div[2]/button')
 		agreeButton.click()
 
-		print("Agreement Passed")
+		logger.info("Agreement Passed")
 
 		verificationPage = WebDriverWait(driver, 60).until(EC.presence_of_element_located((By.XPATH, '//*[@id="mainWrapper"]/div[1]/div/div/div/div/div/div[2]/div[1]')))
 		
@@ -167,7 +167,7 @@ def sendMessage(message):
 		ActionChains(driver).scroll_to_element(verificationButton).perform()
 		verificationButton.click()
 
-		print("Verification Passed")
+		logger.info("Verification Passed")
 
 		mainPage = WebDriverWait(driver, 60).until(EC.presence_of_element_located((By.XPATH, '//*[@id="mainWrapper"]/div[1]/div/div[1]/div[3]/button')))
 
@@ -186,27 +186,29 @@ def sendMessage(message):
 		messageField = WebDriverWait(driver, 60).until(EC.presence_of_element_located((By.XPATH, '//*[@id="message_body"]')))
 		messageField.send_keys(message)
 
-		print('Message Page')
+		logger.info('Message Page')
 
-		driver.save_screenshot('/tmp/screenshot.png')
+		# driver.save_screenshot('/tmp/screenshot.png')
 
-		print('Screenshot Created')
+		# logger.info('Screenshot Created')
 
-		lst = os.listdir("/tmp")
-		print(lst)
+		# lst = os.listdir("/tmp")
+		# logger.info(lst)
 
-		s3_client = boto3.client('s3')
+		# s3_client = boto3.client('s3')
 
-		response = s3_client.upload_file('/tmp/screenshot.png', 'stock-data-debug-bucket', 'screenshot.png')
+		# response = s3_client.upload_file('/tmp/screenshot.png', 'stock-data-debug-bucket', 'screenshot.png')
 
-		print('Screenshot Saved')
+		# logger.info('Screenshot Saved')
 
-		sendButton = messagePage.find_element(By.XPATH, '//*[@id="message-form"]/div[2]/div[5]/div[1]/button')
-		ActionChains(driver).scroll_to_element(sendButton).perform()
-		# sendButton.click()
+		sendButton = WebDriverWait(driver, 60).until(EC.presence_of_element_located((By.XPATH, '//*[@id="recipientArea"]/div[3]/button')))
+		# ActionChains(driver).scroll_to_element(sendButton).perform()
+		sendButton.click()
+
+		logger.info('Message Sent')
 
 	except Exception as e:
-		print('ERROR: ', e)
+		logger.error('ERROR: ', e)
 	finally:
 		driver.close()
 
@@ -215,18 +217,18 @@ def dailyStockData(event, context):
 	name = context.function_name
 	logger.info("Your cron function " + name + " ran at " + str(current_time))
 
-	# tickers = getTickerSymbols(event, context) #['QQQ', 'RSP', 'SPY', 'TLH', 'UWM', '^TNX', '^VIX']
-	# print(tickers)
-	# stockDataFrames = []
+	tickers = getTickerSymbols(event, context) #['QQQ', 'RSP', 'SPY', 'TLH', 'UWM', '^TNX', '^VIX']
+	logger.info(tickers)
+	stockDataFrames = []
 
-	# for ticker in tickers:
-	# 	stockDataFrames.append(getSiteData(f'https://finance.yahoo.com/quote/{ticker}/history', ticker))
+	for ticker in tickers:
+		stockDataFrames.append(getSiteData(f'https://finance.yahoo.com/quote/{ticker}/history', ticker))
 
-	# stockData = pd.concat(stockDataFrames)
+	stockData = pd.concat(stockDataFrames)
 
-	# print(stockData)
+	logger.info(stockData)
 
-	sendMessage('Test Message')
+	sendMessage(stockData)
 	
 
 def getTickerSymbols(event, context):
