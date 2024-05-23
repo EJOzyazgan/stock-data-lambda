@@ -193,7 +193,7 @@ def sendMessage(message):
 
 		s3_client = boto3.client('s3')
 
-		response = s3_client.upload_file('screenshot.png', 'stock-data-debug-bucket', 'screenshot.png')
+		response = s3_client.upload_file('/tmp/screenshot.png', 'stock-data-debug-bucket', 'screenshot.png')
 
 		print('Screenshot Saved')
 
