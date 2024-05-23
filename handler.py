@@ -188,7 +188,7 @@ def sendMessage(message):
 
 		print('Message Page')
 
-		driver.save_screenshot('screenshot.png')
+		driver.save_screenshot('/tmp/screenshot.png')
 
 		print('Screenshot Created')
 
