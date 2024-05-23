@@ -185,11 +185,17 @@ def sendMessage(message):
 		messageField = WebDriverWait(driver, 60).until(EC.presence_of_element_located((By.XPATH, '//*[@id="message_body"]')))
 		messageField.send_keys(message)
 
+		print('Message Page')
+
 		driver.save_screenshot('screenshot.png')
+
+		print('Screenshot Created')
 
 		s3_client = boto3.client('s3')
 
 		response = s3_client.upload_file('screenshot.png', 'stock-data-debug-bucket', 'screenshot.png')
+
+		print('Screenshot Saved')
 
 		sendButton = messagePage.find_element(By.XPATH, '//*[@id="message-form"]/div[2]/div[5]/div[1]/button')
 		ActionChains(driver).scroll_to_element(sendButton).perform()
@@ -205,18 +211,18 @@ def dailyStockData(event, context):
 	name = context.function_name
 	logger.info("Your cron function " + name + " ran at " + str(current_time))
 
-	tickers = getTickerSymbols(event, context) #['QQQ', 'RSP', 'SPY', 'TLH', 'UWM', '^TNX', '^VIX']
-	print(tickers)
-	stockDataFrames = []
+	# tickers = getTickerSymbols(event, context) #['QQQ', 'RSP', 'SPY', 'TLH', 'UWM', '^TNX', '^VIX']
+	# print(tickers)
+	# stockDataFrames = []
 
-	for ticker in tickers:
-		stockDataFrames.append(getSiteData(f'https://finance.yahoo.com/quote/{ticker}/history', ticker))
+	# for ticker in tickers:
+	# 	stockDataFrames.append(getSiteData(f'https://finance.yahoo.com/quote/{ticker}/history', ticker))
 
-	stockData = pd.concat(stockDataFrames)
+	# stockData = pd.concat(stockDataFrames)
 
-	print(stockData)
+	# print(stockData)
 
-	sendMessage(stockData)
+	sendMessage('Test Message')
 	
 
 def getTickerSymbols(event, context):
