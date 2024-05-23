@@ -188,22 +188,22 @@ def sendMessage(message):
 
 		logger.info('Message Page')
 
-		# driver.save_screenshot('/tmp/screenshot.png')
+		driver.save_screenshot('/tmp/screenshot.png')
 
-		# logger.info('Screenshot Created')
+		logger.info('Screenshot Created')
 
-		# lst = os.listdir("/tmp")
-		# logger.info(lst)
+		lst = os.listdir("/tmp")
+		logger.info(lst)
 
-		# s3_client = boto3.client('s3')
+		s3_client = boto3.client('s3')
 
-		# response = s3_client.upload_file('/tmp/screenshot.png', 'stock-data-debug-bucket', 'screenshot.png')
+		s3_client.upload_file('/tmp/screenshot.png', 'stock-data-debug-bucket', 'screenshot.png')
 
-		# logger.info('Screenshot Saved')
+		logger.info('Screenshot Saved')
 
 		sendButton = WebDriverWait(driver, 60).until(EC.presence_of_element_located((By.XPATH, '//*[@id="recipientArea"]/div[3]/button')))
 		# ActionChains(driver).scroll_to_element(sendButton).perform()
-		sendButton.click()
+		# sendButton.click()
 
 		logger.info('Message Sent')
 
@@ -226,7 +226,7 @@ def dailyStockData(event, context):
 
 	stockData = pd.concat(stockDataFrames)
 
-	logger.info(stockData)
+	logger.info(stockData.to_string())
 
 	sendMessage(stockData)
 	
