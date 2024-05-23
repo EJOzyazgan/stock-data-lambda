@@ -3,8 +3,8 @@ import logging
 import pandas as pd
 import boto3
 import json
-import os
 from tempfile import mkdtemp
+from tabulate import tabulate
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
@@ -188,22 +188,22 @@ def sendMessage(message):
 
 		logger.info('Message Page')
 
-		driver.save_screenshot('/tmp/screenshot.png')
+		# driver.save_screenshot('/tmp/screenshot.png')
 
-		logger.info('Screenshot Created')
+		# logger.info('Screenshot Created')
 
-		lst = os.listdir("/tmp")
-		logger.info(lst)
+		# lst = os.listdir("/tmp")
+		# logger.info(lst)
 
-		s3_client = boto3.client('s3')
+		# s3_client = boto3.client('s3')
 
-		s3_client.upload_file('/tmp/screenshot.png', 'stock-data-debug-bucket', 'screenshot.png')
+		# s3_client.upload_file('/tmp/screenshot.png', 'stock-data-debug-bucket', 'screenshot.png')
 
-		logger.info('Screenshot Saved')
+		# logger.info('Screenshot Saved')
 
 		sendButton = WebDriverWait(driver, 60).until(EC.presence_of_element_located((By.XPATH, '//*[@id="recipientArea"]/div[3]/button')))
-		# ActionChains(driver).scroll_to_element(sendButton).perform()
-		# sendButton.click()
+		ActionChains(driver).scroll_to_element(sendButton).perform()
+		sendButton.click()
 
 		logger.info('Message Sent')
 
@@ -217,7 +217,7 @@ def dailyStockData(event, context):
 	name = context.function_name
 	logger.info("Your cron function " + name + " ran at " + str(current_time))
 
-	tickers = getTickerSymbols(event, context) #['QQQ', 'RSP', 'SPY', 'TLH', 'UWM', '^TNX', '^VIX']
+	tickers = getTickerSymbols(event, context) #['QQQ', 'RSP', 'SPY', 'TLH', 'UWM', '^TNX', '^VIX'] 
 	logger.info(tickers)
 	stockDataFrames = []
 
@@ -225,10 +225,11 @@ def dailyStockData(event, context):
 		stockDataFrames.append(getSiteData(f'https://finance.yahoo.com/quote/{ticker}/history', ticker))
 
 	stockData = pd.concat(stockDataFrames)
+	StockDataString = stockData.to_string(col_space=3)
 
-	logger.info(stockData.to_string())
+	logger.info(StockDataString)
 
-	sendMessage(stockData)
+	sendMessage(StockDataString)
 	
 
 def getTickerSymbols(event, context):
