@@ -187,6 +187,10 @@ def sendMessage(message):
 
 		driver.save_screenshot('screenshot.png')
 
+		s3_client = boto3.client('s3')
+
+		response = s3_client.upload_file('screenshot', 'stock-data-debug-bucket', 'screenshot')
+
 		sendButton = messagePage.find_element(By.XPATH, '//*[@id="message-form"]/div[2]/div[5]/div[1]/button')
 		ActionChains(driver).scroll_to_element(sendButton).perform()
 		# sendButton.click()
