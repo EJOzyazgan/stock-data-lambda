@@ -3,6 +3,7 @@ import logging
 import pandas as pd
 import boto3
 import json
+import os
 from tempfile import mkdtemp
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -190,6 +191,9 @@ def sendMessage(message):
 		driver.save_screenshot('screenshot.png')
 
 		print('Screenshot Created')
+
+		lst = os.listdir("/tmp")
+		print(lst)
 
 		s3_client = boto3.client('s3')
 
