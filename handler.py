@@ -187,8 +187,8 @@ def sendMessage(message):
 
 		driver.save_screenshot('screenshot.png')
 
-		# sendButton = messagePage.find_element(By.XPATH, '//*[@id="message-form"]/div[2]/div[5]/div[1]/button')
-		# ActionChains(driver).scroll_to_element(sendButton).perform()
+		sendButton = messagePage.find_element(By.XPATH, '//*[@id="message-form"]/div[2]/div[5]/div[1]/button')
+		ActionChains(driver).scroll_to_element(sendButton).perform()
 		# sendButton.click()
 
 	except Exception as e:
