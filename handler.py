@@ -203,7 +203,7 @@ def sendMessage(message):
 
 		sendButton = WebDriverWait(driver, 60).until(EC.presence_of_element_located((By.XPATH, '//*[@id="recipientArea"]/div[3]/button')))
 		ActionChains(driver).scroll_to_element(sendButton).perform()
-		sendButton.click()
+		# sendButton.click()
 
 		logger.info('Message Sent')
 
