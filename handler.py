@@ -228,7 +228,7 @@ def dailyStockData(event, context):
 
 	logger.info(StockDataString)
 
-	# sendMessage(StockDataString)
+	sendMessage(StockDataString)
 	
 
 def getTickerSymbols(event, context):
