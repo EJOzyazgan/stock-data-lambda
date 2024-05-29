@@ -68,7 +68,8 @@ def getSiteData(url, ticker):
 			'Open': [],
 			'High': [],
 			'Low': [],
-			'Close': []
+			'Close': [],
+			'Volume': [],
 		}
 
 		headerRow = WebDriverWait(driver, 60).until(EC.presence_of_element_located((By.XPATH, '//*[@id="nimbus-app"]/section/section/section/article/div[1]/div[3]/table/thead/tr')))
@@ -86,7 +87,8 @@ def getSiteData(url, ticker):
 			'Open': ['N/A'],
 			'High': ['N/A'],
 			'Low': ['N/A'],
-			'Close': ['N/A']
+			'Close': ['N/A'],
+			'Volume': ['N/A'],
 		}, index=[ticker])
 
 		for key in headers.keys():
@@ -100,7 +102,8 @@ def getSiteData(url, ticker):
 			'Open': ['N/A'],
 			'High': ['N/A'],
 			'Low': ['N/A'],
-			'Close': ['N/A']
+			'Close': ['N/A'],
+			'Volume': ['N/A'],
 		}, index=[ticker])
 	finally:
 		driver.close()
@@ -229,7 +232,7 @@ def dailyStockData(event, context):
 
 	logger.info(StockDataString)
 
-	sendMessage(StockDataString)
+	# sendMessage(StockDataString)
 	
 
 def getTickerSymbols(event, context):
