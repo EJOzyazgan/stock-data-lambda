@@ -65,13 +65,4 @@ resources:
                     - dynamodb:GetItem
                     - dynamodb:PutItem
                     - dynamodb:UpdateItem
-                  Resource: "*"
-
-# custom:
-#   pythonRequirements:
-#     usePipenv: false
-#     dockerizePip: true
-#     dockerFile: Dockerfile
-
-# plugins:
-#   - serverless-python-requirements              
+                  Resource: "*"           

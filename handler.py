@@ -3,8 +3,8 @@ import logging
 import pandas as pd
 import boto3
 import json
+import os
 from tempfile import mkdtemp
-from tabulate import tabulate
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
@@ -130,10 +130,6 @@ def sendMessage(message):
 	driver = webdriver.Chrome(options=options, service=service)
 	
 	try: 
-		
-	# https://sso.gtlconnect.com/users/sign_in
-	# email: hoku2dreamer@gmail.com
-	# pass: Il0vecat5!
 
 		driver.get('https://visit.telmate.com/user/messages')
 		driver.maximize_window()
@@ -141,10 +137,10 @@ def sendMessage(message):
 		loginPage = WebDriverWait(driver, 60).until(EC.presence_of_element_located((By.XPATH, '//*[@id="user_email"]')))
 
 		loginEmailInput = loginPage.find_element(By.XPATH, '//*[@id="user_email"]')
-		loginEmailInput.send_keys("hoku2dreamer@gmail.com")
+		loginEmailInput.send_keys(os.environ['EMAIL'])
 
 		loginPasswordInput = loginPage.find_element(By.XPATH, '//*[@id="user_password"]')
-		loginPasswordInput.send_keys("Il0vecat5!")
+		loginPasswordInput.send_keys(os.environ['PASSWORD'])
 
 		loginButton = loginPage.find_element(By.XPATH, '//*[@id="new_user"]/div[4]/button')
 		loginButton.click()
