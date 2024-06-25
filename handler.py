@@ -160,6 +160,19 @@ def sendMessage(message):
 
 		logger.info("Agreement Passed")
 
+		driver.save_screenshot('/tmp/screenshot-verification.png')
+
+		logger.info('Screenshot Created')
+
+		lst = os.listdir("/tmp")
+		logger.info(lst)
+
+		s3_client = boto3.client('s3')
+
+		s3_client.upload_file('/tmp/screenshot-verification.png', 'stock-data-debug-bucket', 'screenshot-verification.png')
+
+		logger.info('Screenshot Saved')
+
 		verificationPage = WebDriverWait(driver, 60).until(EC.presence_of_element_located((By.XPATH, '//*[@id="mainWrapper"]/div[1]/div/div/div/div/div/div[2]/div[1]')))
 		
 		verificationButton = verificationPage.find_element(By.XPATH, '//*[@id="mainWrapper"]/div[1]/div/div/div/div/div/div[2]/div[1]')
@@ -212,11 +225,11 @@ def sendMessage(message):
 		driver.close()
 
 def dailyStockData(event, context):
-	current_time = datetime.datetime.now().time()
-	name = context.function_name
-	logger.info("Your cron function " + name + " ran at " + str(current_time))
+	# current_time = datetime.datetime.now().time()
+	# name = context.function_name
+	# logger.info("Your cron function " + name + " ran at " + str(current_time))
 
-	tickers = getTickerSymbols(event, context) #['QQQ', 'RSP', 'SPY', 'TLH', 'UWM', '^TNX', '^VIX'] 
+	tickers = ['QQQ', 'RSP', 'SPY', 'TLH', 'UWM', '^TNX', '^VIX'] #getTickerSymbols(event, context) #['QQQ', 'RSP', 'SPY', 'TLH', 'UWM', '^TNX', '^VIX'] 
 	logger.info(tickers)
 	stockDataFrames = []
 
@@ -242,4 +255,4 @@ def getTickerSymbols(event, context):
 		}
 	)["Item"]["Tickers"]["SS"]
 
-# dailyStockData({}, {})
+dailyStockData({}, {})
