@@ -137,10 +137,10 @@ def sendMessage(message):
 		loginPage = WebDriverWait(driver, 60).until(EC.presence_of_element_located((By.XPATH, '//*[@id="user_email"]')))
 
 		loginEmailInput = loginPage.find_element(By.XPATH, '//*[@id="user_email"]')
-		loginEmailInput.send_keys('hoku2dreamer@gmail.com')#os.environ['EMAIL'])
+		loginEmailInput.send_keys(os.environ['EMAIL'])
 
 		loginPasswordInput = loginPage.find_element(By.XPATH, '//*[@id="user_password"]')
-		loginPasswordInput.send_keys('Il0vecat5!')#os.environ['PASSWORD'])
+		loginPasswordInput.send_keys(os.environ['PASSWORD'])
 
 		loginButton = loginPage.find_element(By.XPATH, '//*[@id="new_user"]/div[4]/button')
 		loginButton.click()
@@ -160,22 +160,16 @@ def sendMessage(message):
 
 		logger.info("Agreement Passed")
 
-		driver.execute_script("window.scrollTo(0, 1080)")
-
-		driver.save_screenshot('/tmp/screenshot-verification.png')
-
-		logger.info('Screenshot Created')
-
-		lst = os.listdir("/tmp")
-		logger.info(lst)
-
-		# s3_client = boto3.client('s3')
-
-		# s3_client.upload_file('/tmp/screenshot-verification.png', 'stock-data-debug-bucket', 'screenshot-verification.png')
-
-		# logger.info('Screenshot Saved')
 
 		verificationPage = WebDriverWait(driver, 60).until(EC.presence_of_element_located((By.XPATH, '//*[@id="mainWrapper"]/div[1]/div/div/div/div/div/div[2]/div[1]')))
+
+		# driver.save_screenshot('/tmp/screenshot.png')
+
+		# logger.info('Screenshot Created')
+
+		verificationCookieButton = verificationPage.find_element(By.XPATH, '//*[@id="onetrust-accept-btn-handler"]')
+		ActionChains(driver).scroll_to_element(verificationCookieButton).perform()
+		verificationCookieButton.click()
 		
 		verificationButton = verificationPage.find_element(By.XPATH, '//*[@id="mainWrapper"]/div[1]/div/div/div/div/div/div[2]/div[1]')
 		ActionChains(driver).scroll_to_element(verificationButton).perform()
@@ -187,7 +181,7 @@ def sendMessage(message):
 
 		messageButton = mainPage.find_element(By.XPATH, '//*[@id="mainWrapper"]/div[1]/div/div[1]/div[3]/button')
 		messageButton.click()
-		
+
 		messagePage = WebDriverWait(driver, 60).until(EC.presence_of_element_located((By.XPATH, '//*[@id="newMessage"]')))
 		
 		newMessageButton = messagePage.find_element(By.XPATH, '//*[@id="newMessage"]')
@@ -202,16 +196,11 @@ def sendMessage(message):
 
 		logger.info('Message Page')
 
-		# driver.save_screenshot('/tmp/screenshot.png')
-
-		# logger.info('Screenshot Created')
-
-		# lst = os.listdir("/tmp")
-		# logger.info(lst)
+		# driver.save_screenshot('/tmp/screenshot-message.png')
 
 		# s3_client = boto3.client('s3')
 
-		# s3_client.upload_file('/tmp/screenshot.png', 'stock-data-debug-bucket', 'screenshot-.png')
+		# s3_client.upload_file('/tmp/screenshot.png', 'stock-data-debug-bucket', 'screenshot.png')
 
 		# logger.info('Screenshot Saved')
 
