@@ -14,6 +14,8 @@ from selenium.webdriver.support import expected_conditions as EC
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
+loadWaitTime = 90
+
 def updateTickerSymbols(event, context):
 	data = json.loads(event["body"])["tickers"]
 	logger.info(data)
@@ -72,7 +74,7 @@ def getSiteData(url, ticker):
 			'Volume': [],
 		}
 
-		headerRow = WebDriverWait(driver, 60).until(EC.presence_of_element_located((By.XPATH, '//*[@id="nimbus-app"]/section/section/section/article/div[1]/div[3]/table/thead/tr')))
+		headerRow = WebDriverWait(driver, loadWaitTime).until(EC.presence_of_element_located((By.XPATH, '//*[@id="nimbus-app"]/section/section/section/article/div[1]/div[3]/table/thead/tr')))
 		headerElements = headerRow.find_elements(By.TAG_NAME, 'th')
 
 		for elem in range(len(headerElements)):
@@ -134,7 +136,7 @@ def sendMessage(message):
 		driver.get('https://visit.telmate.com/user/messages')
 		driver.maximize_window()
 
-		loginPage = WebDriverWait(driver, 60).until(EC.presence_of_element_located((By.XPATH, '//*[@id="user_email"]')))
+		loginPage = WebDriverWait(driver, loadWaitTime).until(EC.presence_of_element_located((By.XPATH, '//*[@id="user_email"]')))
 
 		loginEmailInput = loginPage.find_element(By.XPATH, '//*[@id="user_email"]')
 		loginEmailInput.send_keys(os.environ['EMAIL'])
@@ -147,7 +149,7 @@ def sendMessage(message):
 
 		logger.info("Login Passed")
 
-		agreementsPage = WebDriverWait(driver, 60).until(EC.presence_of_element_located((By.XPATH, '//*[@id="tos-pp"]')))
+		agreementsPage = WebDriverWait(driver, loadWaitTime).until(EC.presence_of_element_located((By.XPATH, '//*[@id="tos-pp"]')))
 
 		tosButton = agreementsPage.find_element(By.XPATH, '//*[@id="tos-pp"]')
 		tosButton.click()
@@ -161,7 +163,7 @@ def sendMessage(message):
 		logger.info("Agreement Passed")
 
 
-		verificationPage = WebDriverWait(driver, 60).until(EC.presence_of_element_located((By.XPATH, '//*[@id="mainWrapper"]/div[1]/div/div/div/div/div/div[2]/div[1]')))
+		verificationPage = WebDriverWait(driver, loadWaitTime).until(EC.presence_of_element_located((By.XPATH, '//*[@id="mainWrapper"]/div[1]/div/div/div/div/div/div[2]/div[1]')))
 
 		# driver.save_screenshot('/tmp/screenshot.png')
 
@@ -177,21 +179,21 @@ def sendMessage(message):
 
 		logger.info("Verification Passed")
 
-		mainPage = WebDriverWait(driver, 60).until(EC.presence_of_element_located((By.XPATH, '//*[@id="mainWrapper"]/div[1]/div/div[1]/div[3]/button')))
+		mainPage = WebDriverWait(driver, loadWaitTime).until(EC.presence_of_element_located((By.XPATH, '//*[@id="mainWrapper"]/div[1]/div/div[1]/div[3]/button')))
 
 		messageButton = mainPage.find_element(By.XPATH, '//*[@id="mainWrapper"]/div[1]/div/div[1]/div[3]/button')
 		messageButton.click()
 
-		messagePage = WebDriverWait(driver, 60).until(EC.presence_of_element_located((By.XPATH, '//*[@id="newMessage"]')))
+		messagePage = WebDriverWait(driver, loadWaitTime).until(EC.presence_of_element_located((By.XPATH, '//*[@id="newMessage"]')))
 		
 		newMessageButton = messagePage.find_element(By.XPATH, '//*[@id="newMessage"]')
 		newMessageButton.click()
 
-		contactButton = WebDriverWait(driver, 60).until(EC.presence_of_element_located((By.XPATH, '//*[@id="contactGroup-1"]/li')))
+		contactButton = WebDriverWait(driver, loadWaitTime).until(EC.presence_of_element_located((By.XPATH, '//*[@id="contactGroup-1"]/li')))
 		ActionChains(driver).scroll_to_element(contactButton).perform()
 		contactButton.click()
 
-		messageField = WebDriverWait(driver, 60).until(EC.presence_of_element_located((By.XPATH, '//*[@id="message_body"]')))
+		messageField = WebDriverWait(driver, loadWaitTime).until(EC.presence_of_element_located((By.XPATH, '//*[@id="message_body"]')))
 		messageField.send_keys(message)
 
 		logger.info('Message Page')
@@ -204,7 +206,7 @@ def sendMessage(message):
 
 		# logger.info('Screenshot Saved')
 
-		sendButton = WebDriverWait(driver, 60).until(EC.presence_of_element_located((By.XPATH, '//*[@id="recipientArea"]/div[3]/button')))
+		sendButton = WebDriverWait(driver, loadWaitTime).until(EC.presence_of_element_located((By.XPATH, '//*[@id="recipientArea"]/div[3]/button')))
 		ActionChains(driver).scroll_to_element(sendButton).perform()
 		sendButton.click() 
 
