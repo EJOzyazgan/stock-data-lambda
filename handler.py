@@ -14,7 +14,7 @@ from selenium.webdriver.support import expected_conditions as EC
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
-loadWaitTime = 90
+loadWaitTime = 120
 
 def updateTickerSymbols(event, context):
 	data = json.loads(event["body"])["tickers"]
